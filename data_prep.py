@@ -172,3 +172,16 @@ def kpi_analyzer():
 
     df_kombined =  df_join.merge(df_districts, on='Bezirk')
     df_join.columns
+
+def read_from_google():
+    # https: // drive.google.com / open?id = 1
+
+    googleSheetId = 'gBvP1niNLFG8fjvtutTbx20gdA5tacLu'
+    worksheetName = 'Einwohner'
+    URL = 'https://docs.google.com/spreadsheets/d/{0}/gviz/tq?tqx=out:csv&sheet={1}'.format(
+        googleSheetId,
+        worksheetName
+    )
+
+    df = pandas.read_csv(URL)
+    print(df)
