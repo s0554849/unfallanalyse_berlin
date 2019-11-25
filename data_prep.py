@@ -185,3 +185,69 @@ def read_from_google():
 
     df = pandas.read_csv(URL)
     print(df)
+
+
+
+def apriori_func():
+    print('Support: relative Häufigkeit der Beispiele, in denen die Regel anwendbar ist.')
+    print('Konfidenz: relative Häufigkeit der Beispiele, in denen die Regel richtig ist.')
+    print('Lift: Der Lift gibt an, wie hoch der Konfidenzwert für die Regel den Erwartungswert übertrifft, er zeigt also die generelle Bedeutung einer Regel.\n')
+
+    df = gpd.read_file('WM_Projekt GIT/unfaelle_berlin.geojson')
+    from apyori import apriori
+    df = df.drop(['geometry','OBJECTID', 'LINREFX', 'LINREFY'], axis=1)
+    df_test = df.loc[:,['IstRad', 'IstPKW', 'IstFuss', 'IstKrad', 'IstGkfz', 'IstSonstige']]
+    df_test = df_test.applymap(lambda x: None if x == 0 else x)
+    # df_test.applymap(lambda x:  x.columns[0] if x == 1 else None)
+    # df_test= df_test.iloc[0:100]
+    df_test.shape
+
+    for col in df_test.columns:
+        df_test[col]  = df_test[col].apply(lambda x : col if x ==1 else None)
+
+    df_test
+
+    records = []
+    for i in range(0, df_test.shape[0]):
+        records.append([str(df_test.values[i, j]) for j in range(0, df_test.shape[1])])
+
+        # exclude None values
+    re = []
+    for el in records:
+        re2 = []
+        for el2 in el:
+            if el2 != "None":
+                re2.append(el2)
+        re.append(re2)
+    records = re
+
+    association_rules = apriori(records, min_length=2)#, min_support=0.0045, min_confidence=0.2, min_lift=3, min_length=2)
+    association_results = list(association_rules)
+
+
+
+
+    association_results[0]
+
+    for item in association_results:
+        # first index of the inner list
+        # Contains base item and add item
+        try:
+            pair = item[0]
+            items = [x for x in pair]
+            print("Rule: " + items[0] + " -> " + items[1])
+
+            # second index of the inner list
+            print("Support: " + str(item[1]))
+
+            # third index of the list located at 0th
+            # of the third index of the inner list
+
+            print("Confidence: " + str(item[2][0][2]))
+            print("Lift: " + str(item[2][0][3]))
+            print("=====================================")
+        except:
+            pass
+
+
+apriori_func()
