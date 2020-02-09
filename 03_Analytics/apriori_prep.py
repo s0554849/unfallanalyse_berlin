@@ -33,6 +33,40 @@ dummy_desription = df_dummies.describe()
 cols_to_drop_dummies = ['Fahrrad_0', 'PKW_0', 'Fuss_0','KraftRad_0','GueterKFZ_0', 'Sonstiges_0']
 df_dummies = df_dummies.drop(cols_to_drop_dummies, axis = 1)
 
+columns_rename = ['Januar','Oktober','November','Dezember','Februar','März','April','Mai','Juni','Juli','Augus',
+                  'September','0 Uhr','1 Uhr','10 Uhr','11 Uhr','12 Uhr','13 Uhr','14 Uhr','15 Uhr','16 Uhr',
+                  '17 Uhr','18 Uhr','19 Uhr','2 Uhr','20 Uhr','21 Uhr','22 Uhr','23 Uhr','3 Uhr','4 Uhr','5 Uhr',
+                  '6 Uhr','7 Uhr','8 Uhr','9 Uhr','Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag',
+                  'Samstag','Unfallkategorie: getötet','Unfallkategorie: schwer verletzt',
+                  'Unfallkategorie: leicht verletzt',
+                  'Unfallart: Unfall anderer Art',
+                  'Unfallart: Zusammenstoß mit anfahrendem/ anhaltendem/ruhendem Fahrzeug',
+                  'Unfallart: Zusammenstoß mit vorausfahrendem / wartendem Fahrzeug',
+                  'Unfallart: Zusammenstoß mit seitlich in gleicher Richtung fahrendem Fahrzeug',
+                  'Unfallart: Zusammenstoß mit entgegenkommendem Fahrzeug',
+                  'Unfallart: Zusammenstoß mit einbiegendem / kreuzendem Fahrzeug',
+                  'Unfallart: Zusammenstoß zwischen Fahrzeug und Fußgänger',
+                  'Unfallart: Aufprall auf Fahrbahnhindernis',
+                  'Unfallart:Abkommen von Fahrbahn nach rechts',
+                  'Unfallart: Abkommen von Fahrbahn nach links',
+                  'Unfalltyp: Fahrunfall',
+                  'Unfalltyp: Abbiegeunfall',
+                  'Unfalltyp: Einbiegen / Kreuzen-Unfall',
+                  'Unfalltyp: Überschreiten-Unfall',
+                  'Unfalltyp: Unfall durch ruhenden Verkehr',
+                  'Unfalltyp: Unfall im Längsverkehr',
+                  'Unfalltyp: sonstiger Unfall',
+                  'Lichtverhältnis: Tageslicht',
+                  'Lichtverhältnis: Dämmerung',
+                  'Lichtverhältnis: Dunkelheit','Fahrrad', 'PKW', 'Fussgänger', 'KraftRad', 'Güter KFZ',
+                  'Sonstiger Verkehrsteilnehmener',
+                  'Straßenzustand: trocken',
+                  'Straßenzustand: nass/feucht/schlüpfrig',
+                  'Straßenzustand: winterglatt']
+df_dummies.columns = columns_rename
+
+tst_df = df_dummies.applymap(lambda x : True if x==1 else False) # change 0 and 1 to false and true
+
 all_unf = [] #stores all accidents
 
 #iterate over all accidents
@@ -46,9 +80,11 @@ for rows, cols in df_dummies.iterrows():
         colind += 1
     all_unf.append(tep_unf)
 
+df_all[3].unique()
+
 df_all = pd.DataFrame(all_unf)
 df_all.to_csv('01_Source/apriori_data2.csv')
-df_dummies.to_csv('01_Source/apriori_data.csv')
+df_dummies.to_csv('01_Source/apriori_data_final.csv')
 
 """THE FOLLOWING CODE IS DEPRECATED"""
         # # For the following DFs is the value 0 not a category!
