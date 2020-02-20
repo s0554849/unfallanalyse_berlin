@@ -1,0 +1,66 @@
+---
+title: "apriori"
+author: "Benjamin Wuthe"
+date: "11 12 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# May install packages if necessary
+#install.packages("arules")
+#install.packages("plotly")
+#install.packages("ggplot2")
+#install.packages("arulesViz")
+#install.packages("shinythemes")
+
+
+library(arules)
+library(arulesViz)
+library(plotly)
+library(shinythemes)
+
+```
+
+
+## R Markdown
+
+```{r data}
+# 2nd dataset which was prepared in python and loaded into here
+library(readr)
+apriori_data <- read_csv("apriori_prepared.csv" )
+
+```
+```{r pressure, echo=FALSE}
+
+# import data and drop index-column - may include the parameter list which apply constraints to the analysis
+apri_data <- apriori_data[-c(1,43:46)] #Drop the cluster columns
+apri_data <- apri_data ==1
+rules <- apriori(apri_data
+                 ,parameter = list(supp = 0.1, conf = 0.05, target = "rules")
+	)
+# show table
+arulesViz::inspectDT(rules)
+
+```
+
+```{r}
+
+itemsets <- apriori(apri_data,
+  parameter = list(minlen=1, supp=0.10, target="frequent itemsets"),
+  control = list(verbose=FALSE))
+
+itemsets.sorted <- sort(itemsets, by="support")
+arulesViz::inspectDT(itemsets.sorted)
+
+```
+```{r}
+# interactive scatter plot with plotly, only visible in HTML, not in a PDF
+plot(rules, engine = "plotly", jitter=0)
+```
+
+```{r}  
+# Open Rule Explorer for interactive exploration.
+arulesViz::ruleExplorer(rules)
+```
